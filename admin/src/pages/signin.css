@@ -1,0 +1,90 @@
+.mainlogincont {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 600px;
+}
+.logincont {
+    display: flex;
+    width: 100%;
+    max-width: 800px;
+    /* background-color: #ffffff; */
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+  
+  .logincont .left-panel {
+    flex: 1;
+    padding: 20px;
+    background-color: #FFB400; /* Updated color */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logincont .left-panel h1 {
+    font-size: 2.5rem;
+  }
+  
+  .logincont .left-panel p {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+  .logincont .right-panel {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .logincont .right-panel h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .logincont form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logincont input {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .logincont button {
+    background-color: #FFB400; /* Updated color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .logincont button:hover {
+    background-color: #FF9500; /* Slightly darker shade on hover */
+  }
+  
+  .logincont p {
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .logincont a {
+    color: #FFB400; /* Updated color */
+    text-decoration: none;
+  }
+  
+  .logincont a:hover {
+    text-decoration: underline;
+  }
+  
+  .logincont h2{
+    color: black;
+  }
