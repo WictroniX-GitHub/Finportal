@@ -1,0 +1,87 @@
+.service-card {
+	margin: .5rem;
+	border: 1px solid #80808080;
+	border-radius: .5rem;
+	width: 20rem;
+	overflow: hidden;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.service-card__image {
+	width: inherit;
+}
+
+.service-card__image img {
+	width: inherit;
+	height: 15rem;
+}
+
+.service-card__content {
+	text-align: center;
+	font-size: 1.5rem;
+}
+
+.service-card__price {
+	display: flex;
+	gap: .5rem;
+	align-items: center;
+	justify-content: center;
+}
+
+.service-card__discount {
+	font-size: 1rem;
+	color: #808080;
+	text-decoration: line-through;
+}
+
+.service-card__info {
+	margin: 0 .5rem;
+}
+
+.service-card__info p {
+	text-align: center;
+	font-weight: 800;
+}
+
+.service-card__item {
+	list-style-type: square;
+}
+
+.service-card__cta {
+	margin: 1rem 0 2rem 0;
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+.service-card__button {
+	padding: .75rem 3rem;
+	width: 80%;
+	font-weight: 600;
+	background-color: #FFB400;
+	border: none;
+	color: black;
+	border-radius: .25rem;
+	transition: 100ms ease-in-out;
+}
+
+.service-card__button:hover {
+	color: #fff;
+	background-color: #184341;
+	transition: 100ms ease-in-out;
+}
+
+.service-card__link {
+	color: #FFB400;
+	text-decoration: none;
+	font-size: .8rem;
+	transition: 100ms ease-in-out;
+}
+
+.service-card__link:hover {
+	text-decoration: underline;
+	color: #184341;
+	transition: 100ms ease-in-out;
+}

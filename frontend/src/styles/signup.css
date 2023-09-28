@@ -1,0 +1,88 @@
+.signcont  {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    
+}
+.signcont{
+    flex-direction: column;
+}
+.signcont h1 {
+    text-align: center;
+    color: #FFB400; /* Updated color */
+}
+
+.signcont .form-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.signcont input {
+    flex: 1;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.signcont button {
+    background-color: #FFB400; /* Updated color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.signcont button:hover {
+    background-color: #FF9500; /* Slightly darker shade on hover */
+}
+
+.signcont .google{
+    padding: 15px;
+}
+
+.signcont .fc{
+    margin: -10px 10px;
+}
+
+.signup-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 200px 0 200px 0;
+    background-color: #184341; 
+    /* opacity: 0.69; */
+    margin-top: -150px;
+    background-image: url(../components/Assets/5039684.jpg);
+    background-attachment: fixed;
+    background-blend-mode: soft-light;
+    background-size: cover;
+  }
+
+  .signup-form-btn{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media only screen and (max-width: 764px) {
+    .signcont .form-group {
+        flex-direction: column;
+    }
+    .signcont input {
+        width: auto;
+    }
+    .signcont{
+        margin: 20px;
+    }
+    .signcont button {
+        /* width: 100%; */
+    }
+    .signup-form-btn{
+        flex-direction: column;
+    }
+  }

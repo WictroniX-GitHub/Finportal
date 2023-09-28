@@ -1,0 +1,150 @@
+/* Reset some default styles */
+
+.first-box input{
+  width:300px;
+}
+.itrform {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff; /* White Background */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box Shadow */
+}
+.itrform input {
+  flex: 1;
+}
+.itrform h2 {
+  color: #333; /* Dark Grey Text */
+  font-size: -webkit-xxx-large;
+}
+
+.itrform form {
+  margin-top: 40px;
+  /* max-width: 700px;
+    width: 610px; */
+}
+
+.itrform .full_form {
+  margin-top: 20px;
+}
+.itrform label {
+  display: block;
+  margin-top: 10px;
+  color: #333; /* Dark Grey Text */
+  font-size: 20px;
+}
+
+.itrform input[type="text"],
+.itrform input[type="password"] {
+  flex: 1 1;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.itrform .radio_button input {
+  flex: 0 0;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+
+}
+.itrform input[type="file"] {
+  margin-top: 10px;
+}
+
+.itrform button {
+  background-color: #ffcc00; /* Yellow Button Background */
+  color: #333; /* Dark Grey Text */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.itrform button:hover {
+  background-color: #ffdb4d; /* Lighter Yellow on Hover */
+}
+
+.itrform .preview {
+  margin-top: 20px;
+  color: #333; /* Dark Grey Text */
+  font-weight: bold;
+}
+
+/* Media Query for Responsive Design */
+@media (max-width: 768px) {
+  .itrform {
+    padding: 10px;
+    width: 80%;
+  }
+
+  .itrform input[type="text"],
+  .itrform input[type="password"],
+  .itrform input[type="radio"],
+  .itrform input[type="checkbox"] {
+    padding: 8px;
+  }
+}
+@media(max-width:768px){
+
+    .itrform .first-box{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+.itrform .field {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.itrform .wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.itrform .files {
+  margin-top: 20px;
+}
+
+.itrform .button {
+  display: flex;
+  justify-content: center;
+}
+.itrform .income {
+  display: flex;
+}
+.itrform .field .income input {
+  margin-top: 15px;
+}
+.itrform .titles {
+  font-size: large;
+  font-family: sans-serif;
+  font-weight: 600;
+  flex:1;
+}
+
+.itrform .balancesheet {
+  display: flex;
+  margin-left: 40px;
+}
+.itrform .balancesheet input {
+  margin-top: 15px;
+}
+
+.itrform .payment .payment-text{
+   margin-top: 20px;
+   font-size: x-large;
+}
+.itrform .payment .price{
+  font-weight: 600;
+  font-size: x-large;
+}
