@@ -46,26 +46,26 @@ const firebaseContext = createContext(null);
 // };
 
 // Dhanish Firebase API
-// const firebaseConfig = {
-//   apiKey: "AIzaSyD6MQy2d-bOJKE0QruR_IQahNue5A0LrDI",
-//   authDomain: "finportal-4d01f.firebaseapp.com",
-//   databaseURL: "https://finportal-4d01f-default-rtdb.firebaseio.com/",
-//   projectId: "finportal-4d01f",
-//   storageBucket: "finportal-4d01f.appspot.com",
-//   messagingSenderId: "691533092881",
-//   appId: "1:691533092881:web:499ab1cd636543223979b0",
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyD6MQy2d-bOJKE0QruR_IQahNue5A0LrDI",
+  authDomain: "finportal-4d01f.firebaseapp.com",
+  databaseURL: "https://finportal-4d01f-default-rtdb.firebaseio.com/",
+  projectId: "finportal-4d01f",
+  storageBucket: "finportal-4d01f.appspot.com",
+  messagingSenderId: "691533092881",
+  appId: "1:691533092881:web:499ab1cd636543223979b0",
+};
 
 // Aaryan Firebase API
-const firebaseConfig = {
-  apiKey: "AIzaSyBT945IYFy9Tkg_cqBdrirwu-oHxPviLBw",
-  authDomain: "finportal-e0cbf.firebaseapp.com",
-  projectId: "finportal-e0cbf",
-  storageBucket: "finportal-e0cbf.appspot.com",
-  messagingSenderId: "896200911693",
-  appId: "1:896200911693:web:fed94ead60d9ca7a74a504",
-  databaseURL: "https://finportal-e0cbf-default-rtdb.firebaseio.com"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBT945IYFy9Tkg_cqBdrirwu-oHxPviLBw",
+//   authDomain: "finportal-e0cbf.firebaseapp.com",
+//   projectId: "finportal-e0cbf",
+//   storageBucket: "finportal-e0cbf.appspot.com",
+//   messagingSenderId: "896200911693",
+//   appId: "1:896200911693:web:fed94ead60d9ca7a74a504",
+//   databaseURL: "https://finportal-e0cbf-default-rtdb.firebaseio.com"
+// };
 
 //Firebase Instances
 export const useFirebase = () => useContext(firebaseContext);
@@ -178,12 +178,13 @@ export const FirebaseApp = (props) => {
 // fetch ITRfile
 
 const FetchPdf = async()=>{
+  console.log(isUser)
   console.log("fetch pdf function run");
   const format=".pdf"
   await getDownloadURL(
     ref(
       storage,
-      `Documents/${isUser}/Admin/ITRFILE-${isUser}${format}`
+      `Documents/${isUser}/Capital Income/Admin/ITRFILE-${isUser}${format}`
     )
   ).then((url) => {
     setItrfile(url);

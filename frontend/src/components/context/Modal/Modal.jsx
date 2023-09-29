@@ -1,34 +1,19 @@
 import React, { useState } from 'react'
-import { Worker } from '@react-pdf-viewer/core';
-// Import the main component
-import { Viewer } from '@react-pdf-viewer/core';
-import { useFirebase } from '../context/firebaseContext';
+import { useFirebase } from '../firebaseContext';
+export const Modal = (props) => {
 
-
-// Import the styles
-import '@react-pdf-viewer/core/lib/styles/index.css';
-
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-
-// Import styles
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-
-export const Modal = () => {
   const firebase = useFirebase();
   // const [modal,setModal] = useState(false);
   const [itrfile,setItrfile] =useState(null);
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
   const FetchITR = () => {
-       const pdfurl = firebase.FetchPdf().then((url)=>{setItrfile(url);console.log(url)});
-       
-            //  setModal(true);
+    console.log("lala")
+       firebase.FetchPdf().then((url)=>{setItrfile(url);console.log(url)});
+       console.log("kalaak")
   }
 
   return (
     <div className=''>
-<button className='btn btn-primary btn-md'
-    onClick={FetchITR} ><a href={itrfile} target='_blank'>View ITRFile</a></button>
+     <a href={itrfile} onClick={FetchITR}  target='_blank'>View ITRFile</a>
 
 
 

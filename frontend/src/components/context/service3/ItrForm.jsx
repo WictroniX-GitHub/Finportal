@@ -4,6 +4,7 @@ import { listAll, getDownloadURL, ref } from "firebase/storage";
 import Preview from "../layout/Preview";
 import "../ItrForm.css";
 import Common from "../layout/Common";
+import { Modal } from "../Modal/Modal";
 function ItrForm(props) {
   const firebase = useFirebase();
   const [imageUpload, setImageUpload] = useState([]);
@@ -646,7 +647,9 @@ function ItrForm(props) {
 
             <div className="preview button">
               <Preview heading={props.heading}/>
+              
             </div>
+            <Modal service={props.heading} />
           </form>
         </div>
       )}
