@@ -127,34 +127,28 @@ export const FirebaseApp = (props) => {
     });
   };
 
+ 
 
   const updateMessage = async (document) => {
-    const updateValue = {
-      message: document.message,
-      status: document.status,
-    };
-
     const folderRef = ref(storage, `Documents/${document.id}`);
     listAll(folderRef).then((result) => {
       result.items.forEach((itemRef) => {
-        // Delete each item (file) in the folder
         deleteObject(itemRef);
       });
     });
-    return await updateDoc(doc(firestore, "users", document.id), updateValue);
+    return await updateDoc(doc(firestore, "users", document.id), document);
   };
 
   
    //Upload ITRFORM File the Admin side
-
-   const submitITRFilebyadmin = async (coverImage) => {
+   const submitITRFilebyadmin = async (coverImage,service) => {
     const filename = coverImage.file.name.split(".")
-    // console.log(filename.length)
+    console.log(filename.length)
     const format = "."+filename[filename.length-1];
     console.log(format)
     const storeRef = ref(
       storage,
-      `Documents/${isUser}/Admin/ITRFILE-${isUser}${format}`
+      `Documents/${isUser}/${service}/Admin/ITRFILE-${isUser}${format}`
     );
     const resultBucket = await uploadBytes(storeRef, coverImage.file);
   };

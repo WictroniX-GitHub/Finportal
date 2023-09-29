@@ -5,21 +5,18 @@ import { listAll, getDownloadURL, ref } from "firebase/storage";
 
 import UserData from "./UserData";
 
-function Preview({document}) {
+function Preview({document,services,filters}) {
   const firebase = useFirebase();
   const [info, setinfo] = useState(null);
-
   const [imageList, setImageList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [message, setmessage] = useState("");
   const [imageUpload, setImageUpload] = useState([]);
-
   const [orders, setOrders] = useState([]);
   const handleChange = (event) => {
     console.log(event.target.value);
     setmessage(event.target.value);
   };
-
   const openModal = (event) => {
     event.preventDefault();
     setIsModalOpen(true);
@@ -28,14 +25,21 @@ function Preview({document}) {
       setinfo(rs.data());
     });
     console.log(info);
-    // console.log(detail.data())
+
   };
   const handlebar = async (document) => {
     // event.preventDefault()
-    console.log(document);
-    document.message = message;
-    document.status = "reject";
-    await firebase.updateMessage(document).then((data) => {
+    console.log(document);    
+    document.service.map(serv => {
+      console.log(serv)
+    if(services == serv.servicename){
+      serv.message = message;
+      serv.status = filters
+     return;
+    }
+    })
+    console.log(document)
+    firebase.updateMessage(document).then((data) => {
       console.log(data);
     });
     setmessage("");
@@ -52,10 +56,16 @@ function Preview({document}) {
       console.log(orders);
     });
   };
-  const acceptData = async (doc) => {
-    doc.message = "success";
-    doc.status = "true";
-    await firebase.updateMessage(doc);
+  const acceptData = async (document) => {
+    document.service.map(serv => {
+      console.log(serv)
+    if(services == serv.servicename){
+      serv.message = message;
+      serv.status = "accept"
+     return;
+    }
+    })
+    await firebase.updateMessage(document);
     userData();
   };
   const closeModal = (event) => {
@@ -66,6 +76,7 @@ function Preview({document}) {
     const imageListRef = ref(firebase.storage, `Documents/${document.id}`);
     const fetchImages = async () => {
       try {
+        console.log(services)
         const res = await listAll(imageListRef);
         const newImages = await Promise.all(
           res.items.map(async (item) => {

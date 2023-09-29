@@ -100,8 +100,6 @@ function Orders() {
             <option value="reject">Reject</option>
             <option value="false">Pending</option>
           </select>
-
-          
           <select name="Service" id="" onClick={(event) => setService(event.target.value)}>
             <option value="Salary Or House Rent Income">Salary Or House Rent Income</option>
             <option value="Capital Income">Capital Income</option>
@@ -113,7 +111,6 @@ function Orders() {
             <option value="Trademark Registration (Individual)">Trademark Registration (Individual)</option>
             <option value="Run Your Business (Lite)">Run Your Business (Lite)</option>
           </select>
-          
           <button onClick={userData}>Refresh</button>
         </div>
 
@@ -133,43 +130,23 @@ function Orders() {
 
             return (
               <>
-              {document.service.map((res) => {
+              {document.service && document.service.map((res) => {
                 return(res.status == filter && res.servicename == service && (
                   <tr>
-                  
                   <td>{document.firstname + " " + document.lastname}</td>
                   <td>{document.email}</td>
                   <td>{res.message}</td>
-                  
                   <td>
                     {filter == "true" && "Accept"}
                     {filter == "false" && "Pending"}
                     {filter == "reject" && "Reject"}
                   </td>
                   <div className="preview button">
-                    <Preview id={document.id} document = {document}  />
+                    <Preview id={document.id} document = {document} services={service} filters={filter} />
                   </div>
                 </tr>)
-                
                 )
               })}
-              
-              {/* {document.status == filter && document.service == service && (
-                <tr>
-                  
-                  <td>{document.firstname + " " + document.lastname}</td>
-                  <td>{document.email}</td>
-                  <td>{document.message}</td>
-                  <td>
-                    {filter == "true" && "Accept"}
-                    {filter == "false" && "Pending"}
-                    {filter == "reject" && "Reject"}
-                  </td>
-                  <div className="preview button">
-                    <Preview id={document.id} document = {document}  />
-                  </div>
-                </tr>
-              )} */}
               </>
             );
             

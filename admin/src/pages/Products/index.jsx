@@ -18,20 +18,21 @@ function Products() {
   const [search, setSearch] = useState("");
   const [message, setmessage] = useState("");
   const [imageUpload, setImageUpload] = useState([]);
+  const [service, setService] = useState("House Or Rent Income");
+  console.log(service)
 
   const handleChange = (event) => {
     console.log(event.target.value);
     setmessage(event.target.value);
   };
   
-
   const putData = async (event) => {
     event.preventDefault();
     try {
-      console.log("startttt");
+      console.log("start");
       await imageUpload.forEach((element) => {
-        console.log("working");
-        firebasee.submitITRFilebyadmin(element);
+        console.log("working .... end");
+        firebasee.submitITRFilebyadmin(element,service);
       });
       
     } catch (error) {
@@ -39,7 +40,6 @@ function Products() {
     }
     // window.location.reload();
   };
-
   const imageSet = (name, file) => {
     setImageUpload([
       ...imageUpload,
@@ -50,9 +50,6 @@ function Products() {
     ]);
     console.log(imageUpload);
   };
-
-  
-
   const handlebar = async (document) => {
     // event.preventDefault()
     console.log(document);
@@ -98,9 +95,20 @@ function Products() {
                
             />
           </div>
+          <select name="Service" id="" onClick={(event) => setService(event.target.value)}>
+            <option value="Salary Or House Rent Income">Salary Or House Rent Income</option>
+            <option value="Capital Income">Capital Income</option>
+            <option value="PGBP Income">PGBP Income</option>
+            <option value="Share Trading">Share Trading</option>
+            <option value="Presumptive Taxation">Presumptive Taxation</option>
+            <option value="Crypto Transactions">Crypto Transactions</option>
+            <option value="Private Limited Company Registration">Private Limited Company Registration</option>
+            <option value="Trademark Registration (Individual)">Trademark Registration (Individual)</option>
+            <option value="Run Your Business (Lite)">Run Your Business (Lite)</option>
+          </select>
+
           <button onClick={userData}>Refresh</button>
         </div>
-
         <table>
           <thead>
             {/* <th>ID</th> */}
@@ -109,42 +117,38 @@ function Products() {
             <th>Message</th>
             <th>Status</th>
             <th>ITRFile</th>
-          
           </thead>
 
           {orders.map((document) => {
             return (
-              document.status === "true" && (
-                <tr>
-                  {/* <td>{document.id}</td> */}
-                  <td>{document.firstname + " " + document.lastname}</td>
-                  <td>{document.email}</td>
-                  <td>{document.message}</td>
-                  <td>{document.status}</td>
-                  
-                  <td style={{ display: "flex", gap: "10px" }}>
-                   
-                    
-
-
-                    <div className="first-box">
-                    <label htmlFor="" className="titles">
-                      
-                    </label>
-                    <input
-                      type="file"
-                      name="ITRFile"
-                      onChange={(event) => {
-                        imageSet(event.target.name, event.target.files[0]);
-                      }}
-                    />
-
-                    <button onClick={putData}>Upload File</button>
-                  </div>
-                  </td>
-                </tr>
-              )
-            );
+              <>
+              {document.service && document.service.map(res => {
+                return(res.status === "accept" && res.servicename === service && (
+                  <tr>
+                    {/* <td>{document.id}</td> */}
+                    <td>{document.firstname + " " + document.lastname}</td>
+                    <td>{document.email}</td>
+                    <td>{document.message}</td>
+                    <td>{document.status}</td>
+                    <td style={{ display: "flex", gap: "10px" }}>
+                      <div className="first-box">
+                      <label htmlFor="" className="titles">  
+                      </label>
+                      <input
+                        type="file"
+                        name="ITRFile"
+                        onChange={(event) => {
+                          imageSet(event.target.name, event.target.files[0]);
+                        }}
+                      />
+                      <button onClick={putData}>Upload File</button>
+                    </div>
+                    </td>
+                  </tr>
+              ))
+            })}
+            </>
+            )
           })}
         </table>
       </div>
