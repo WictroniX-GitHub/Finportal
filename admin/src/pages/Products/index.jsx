@@ -8,7 +8,6 @@ import {
 import "../styles.css";
 
 function Products() {
-
   const firebasee = useFirebase();
   const [orders, setOrders] = useState([]);
   useEffect(() => {
@@ -18,25 +17,24 @@ function Products() {
   const [search, setSearch] = useState("");
   const [message, setmessage] = useState("");
   const [imageUpload, setImageUpload] = useState([]);
-  const [service, setService] = useState("House Or Rent Income");
-  console.log(service)
+  const [service, setService] = useState("Salary Or House Rent Income");
+  console.log(service);
 
   const handleChange = (event) => {
     console.log(event.target.value);
     setmessage(event.target.value);
   };
-  
+
   const putData = async (event) => {
     event.preventDefault();
     try {
       console.log("start");
       await imageUpload.forEach((element) => {
         console.log("working .... end");
-        firebasee.submitITRFilebyadmin(element,service);
+        firebasee.submitITRFilebyadmin(element, service);
       });
-      
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     // window.location.reload();
   };
@@ -54,8 +52,8 @@ function Products() {
     // event.preventDefault()
     console.log(document);
     document.message = message;
-    document.status = "reject"
-    setmessage("")
+    document.status = "reject";
+    setmessage("");
     await firebasee.updateMessage(document).then((data) => {
       console.log(data);
     });
@@ -63,10 +61,10 @@ function Products() {
     // window.location.reload();
   };
   const acceptData = async (doc) => {
-      doc.message = "success";
-      doc.status = "true"
-      await firebasee.updateMessage(doc);
-      userData()
+    doc.message = "success";
+    doc.status = "true";
+    await firebasee.updateMessage(doc);
+    userData();
   };
   const userData = () => {
     firebasee.getUser().then((result) => {
@@ -92,19 +90,30 @@ function Products() {
               value={search}
               placeholder="Search.."
               className="dashboard-content-input"
-               
             />
           </div>
-          <select name="Service" id="" onClick={(event) => setService(event.target.value)}>
-            <option value="Salary Or House Rent Income">Salary Or House Rent Income</option>
+          <select
+            name="Service"
+            id=""
+            onClick={(event) => setService(event.target.value)}
+          >
+            <option value="Salary Or House Rent Income">
+              Salary Or House Rent Income
+            </option>
             <option value="Capital Income">Capital Income</option>
             <option value="PGBP Income">PGBP Income</option>
             <option value="Share Trading">Share Trading</option>
             <option value="Presumptive Taxation">Presumptive Taxation</option>
             <option value="Crypto Transactions">Crypto Transactions</option>
-            <option value="Private Limited Company Registration">Private Limited Company Registration</option>
-            <option value="Trademark Registration (Individual)">Trademark Registration (Individual)</option>
-            <option value="Run Your Business (Lite)">Run Your Business (Lite)</option>
+            <option value="Private Limited Company Registration">
+              Private Limited Company Registration
+            </option>
+            <option value="Trademark Registration (Individual)">
+              Trademark Registration (Individual)
+            </option>
+            <option value="Run Your Business (Lite)">
+              Run Your Business (Lite)
+            </option>
           </select>
 
           <button onClick={userData}>Refresh</button>
@@ -122,33 +131,30 @@ function Products() {
           {orders.map((document) => {
             return (
               <>
-              {document.service && document.service.map(res => {
-                return(res.status === "accept" && res.servicename === service && (
+                {document[service] && document[service].status === "true" && (
                   <tr>
                     {/* <td>{document.id}</td> */}
                     <td>{document.firstname + " " + document.lastname}</td>
                     <td>{document.email}</td>
-                    <td>{document.message}</td>
-                    <td>{document.status}</td>
+                    <td>{document[service].message}</td>
+                    <td>{document[service].status}</td>
                     <td style={{ display: "flex", gap: "10px" }}>
                       <div className="first-box">
-                      <label htmlFor="" className="titles">  
-                      </label>
-                      <input
-                        type="file"
-                        name="ITRFile"
-                        onChange={(event) => {
-                          imageSet(event.target.name, event.target.files[0]);
-                        }}
-                      />
-                      <button onClick={putData}>Upload File</button>
-                    </div>
+                        <label htmlFor="" className="titles"></label>
+                        <input
+                          type="file"
+                          name="ITRFile"
+                          onChange={(event) => {
+                            imageSet(event.target.name, event.target.files[0]);
+                          }}
+                        />
+                        <button onClick={putData}>Upload File</button>
+                      </div>
                     </td>
                   </tr>
-              ))
-            })}
-            </>
-            )
+                )}
+              </>
+            );
           })}
         </table>
       </div>

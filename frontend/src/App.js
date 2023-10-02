@@ -41,10 +41,10 @@ function App() {
       <Route path='/signup' element={<Signup/>} />
       <Route path='/contact' element={<Contact/>} />
       <Route path='/itr' element={<ItrFiling/>} />
-      <Route path='/itrform1' element={firebase.isUser ? <Itrform price="₹299.00" fieldArea={[]} heading = "House Or Rent Income" /> : <Navigate to="/signin" />}/>
-      <Route path='/itrform2' element={firebase.isUser ? <Itrform price="₹399.00" fieldArea={["CG"]} heading = {"Capital Gain Income"}/> : <Navigate to="/signin" />}/>
+      <Route path='/itrform1' element={firebase.isUser ? <Itrform price="₹299.00" fieldArea={[]} heading = "Salary Or House Rent Income" /> : <Navigate to="/signin" />}/>
+      <Route path='/itrform2' element={firebase.isUser ? <Itrform price="₹399.00" fieldArea={["CG"]} heading = {"Capital Income"}/> : <Navigate to="/signin" />}/>
       <Route path='/itrform3' element={firebase.isUser ? <Itrform price="₹499.00"fieldArea={["CG", "PGBP"]} heading={"PGBP Income"}/> : <Navigate to="/signin" />}/>
-      <Route path='/itrform3' element={firebase.isUser ? <Itrform price="₹599.00" fieldArea={["CG", "PGBP"]} heading={"PGBP Income"}/> : <Navigate to="/signin" />}/>
+      
       <Route path='/itrform4' element={firebase.isUser ? <Itrform price="₹699.00" fieldArea={["CG"]} heading={"Share Trading"} /> : <Navigate to="/signin" />}/>
       <Route path='/itrform5' element={firebase.isUser ? <Itrform price="₹799.00" fieldArea={["CG","PGBP"]} heading={"Presumptive Taxation"}/> : <Navigate to="/signin" />}/>
       <Route path='/itrform6' element={firebase.isUser ? <Itrform price="₹899.00" fieldArea={["CG"]} heading={"Crypto Transactions"} /> : <Navigate to="/signin" />}/>

@@ -13,7 +13,7 @@ export const Modal = (props) => {
 
   return (
     <div className=''>
-     <a href={itrfile} onClick={FetchITR}  target='_blank'>View ITRFile</a>
+     <a href={itrfile} onClick={FetchITR}  target='_blank' >View ITRFile</a>
 
 
 

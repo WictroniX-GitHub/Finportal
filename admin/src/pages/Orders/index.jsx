@@ -11,12 +11,11 @@ function Orders() {
   const firebasee = useFirebase();
   const [orders, setOrders] = useState([]);
   const [filter, setfilter] = useState("false");
-  const [service, setService] = useState("House Or Rent Income");
-
+  const [service, setService] = useState("Salary Or House Rent Income");
 
   useEffect(() => {
     userData();
-    console.log(filter)
+    console.log(filter);
   }, [filter]);
 
   const [message, setmessage] = useState("");
@@ -26,8 +25,6 @@ function Orders() {
     console.log(event.target.value);
     setmessage(event.target.value);
   };
-  
-    
 
   const putData = async (event) => {
     event.preventDefault();
@@ -84,7 +81,7 @@ function Orders() {
       console.log(orders);
     });
   };
-  
+
   console.log(filter);
 
   return (
@@ -93,23 +90,38 @@ function Orders() {
 
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
-
           <h2>Orders List</h2>
-          <select name="Status" id="" onClick={(event) => setfilter(event.target.value)}>
+          <select
+            name="Status"
+            id=""
+            onClick={(event) => setfilter(event.target.value)}
+          >
             <option value="true">Accept</option>
             <option value="reject">Reject</option>
             <option value="false">Pending</option>
           </select>
-          <select name="Service" id="" onClick={(event) => setService(event.target.value)}>
-            <option value="Salary Or House Rent Income">Salary Or House Rent Income</option>
+          <select
+            name="Service"
+            id=""
+            onClick={(event) => setService(event.target.value)}
+          >
+            <option value="Salary Or House Rent Income">
+              Salary Or House Rent Income
+            </option>
             <option value="Capital Income">Capital Income</option>
             <option value="PGBP Income">PGBP Income</option>
             <option value="Share Trading">Share Trading</option>
             <option value="Presumptive Taxation">Presumptive Taxation</option>
             <option value="Crypto Transactions">Crypto Transactions</option>
-            <option value="Private Limited Company Registration">Private Limited Company Registration</option>
-            <option value="Trademark Registration (Individual)">Trademark Registration (Individual)</option>
-            <option value="Run Your Business (Lite)">Run Your Business (Lite)</option>
+            <option value="Private Limited Company Registration">
+              Private Limited Company Registration
+            </option>
+            <option value="Trademark Registration (Individual)">
+              Trademark Registration (Individual)
+            </option>
+            <option value="Run Your Business (Lite)">
+              Run Your Business (Lite)
+            </option>
           </select>
           <button onClick={userData}>Refresh</button>
         </div>
@@ -125,31 +137,34 @@ function Orders() {
             {/* <th>Accept</th>
             <th>Reject</th> */}
           </thead>
-           
-          {orders.map((document) => {
 
+          {orders.map((document) => {
+            console.log(document[service])
             return (
               <>
-              {document.service && document.service.map((res) => {
-                return(res.status == filter && res.servicename == service && (
+                {document[service] && document[service].status === filter && (
                   <tr>
-                  <td>{document.firstname + " " + document.lastname}</td>
-                  <td>{document.email}</td>
-                  <td>{res.message}</td>
-                  <td>
-                    {filter == "true" && "Accept"}
-                    {filter == "false" && "Pending"}
-                    {filter == "reject" && "Reject"}
-                  </td>
-                  <div className="preview button">
-                    <Preview id={document.id} document = {document} services={service} filters={filter} />
-                  </div>
-                </tr>)
-                )
-              })}
+                    <td>{document.firstname + " " + document.lastname}</td>
+                    <td>{document.email}</td>
+                    <td>{document[service].message}</td>
+
+                    <td>
+                      {filter == "true" && "Accept"}
+                      {filter == "false" && "Pending"}
+                      {filter == "reject" && "Reject"}
+                    </td>
+                    <div className="preview button">
+                      <Preview
+                        id={document.id}
+                        document={document}
+                        services={service}
+                        filters={filter}
+                      />
+                    </div>
+                  </tr>
+                )}
               </>
             );
-            
           })}
         </table>
       </div>
