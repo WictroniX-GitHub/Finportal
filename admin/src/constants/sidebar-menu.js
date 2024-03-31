@@ -22,12 +22,12 @@ const sidebar_menu = [
         path: '/products',
         title: 'Products',
     },
-    {
-        id: 4,
-        icon: UserIcon,
-        path: '/profile',
-        title: 'My account',
-    }
+    // {
+    //     id: 4,
+    //     icon: UserIcon,
+    //     path: '/profile',
+    //     title: 'My account',
+    // }
 ]
 
 export default sidebar_menu;

@@ -9,9 +9,11 @@ import "../styles.css";
 import SideBar from "../../components/Sidebar";
 
 import sidebar_menu from "../../constants/sidebar-menu" ;
+import Loading from "../Loading";
 function Dashboard() {
   const firebasee = useFirebase();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true)
   
   useEffect(() => {
     userData();
@@ -19,6 +21,7 @@ function Dashboard() {
 
   const [search, setSearch] = useState("");
   const [message, setmessage] = useState("");
+  const [show, setShow] = useState("");
 
   const handleChange = (event) => {
     console.log(event.target.value);
@@ -49,18 +52,24 @@ function Dashboard() {
       result.forEach((doc) => {
         dataArr.push({ id: doc.id, ...doc.data() });
       });
+      setLoading(false)
       setOrders(dataArr);
-      console.log(orders);
+      // console.log(orders);
     });
   };
 
+  if(loading) {
+    return <Loading />
+  }
+
+
   return (
     <div className="dashboard-content">
-      <DashboardHeader btnText="New Order" />
+      {/* <DashboardHeader btnText="New Order" /> */}
 
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
-          <h2>Orders List</h2>
+          <h2>Dashboard</h2>
           <div className="dashboard-content-search">
             <input
               type="text"
@@ -71,7 +80,7 @@ function Dashboard() {
           </div>
           <button onClick={userData}>Refresh</button>
         </div>
-
+        {show && <h3 style={{ marginLeft: "1vh",padding: "2vh",width:"20vh", height:"2vh", color: "white", textAlign: "center", fontSize:"2vh" ,backgroundColor: "green"}}>{show}</h3>}
         <table>
           <thead>
             {/* <th>ID</th> */}
@@ -92,8 +101,14 @@ function Dashboard() {
                 
                 <td>
                   <button
-                    onClick={() => {
-                      firebasee.handleDelete(document.id);
+                    onClick={async () => {
+                      await firebasee.handleDelete(document.id).then(() => {
+                      setShow("User Deleted")
+                      setTimeout(() => {
+                        setShow("")
+                        userData()
+                      }, 3000)
+                      })
                     }}
                     style={{
                       width: "70px",

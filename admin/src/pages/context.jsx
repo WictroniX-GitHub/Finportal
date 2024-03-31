@@ -32,7 +32,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { getDatabase, set, ref as dhanish } from "firebase/database";
+import { getDatabase, set, ref as mihir, get, child } from "firebase/database";
 
 // context api
 const firebaseContext = createContext(null);
@@ -49,15 +49,15 @@ const firebaseContext = createContext(null);
 // };
 
 // Dhanish Firebase API
-const secondaryAppConfig = {
-  apiKey: "AIzaSyDcZZqM60_U-HaM9XnZSbfVIuxwZv9RFyU",
-  authDomain: "fir-project-38425.firebaseapp.com",
-  databaseURL: "https://fir-project-38425-default-rtdb.firebaseio.com",
-  projectId: "fir-project-38425",
-  storageBucket: "fir-project-38425.appspot.com",
-  messagingSenderId: "412992568512",
-  appId: "1:412992568512:web:7f9782ac6872723873c125",
-};
+// const secondaryAppConfig = {
+//   apiKey: "AIzaSyDcZZqM60_U-HaM9XnZSbfVIuxwZv9RFyU",
+//   authDomain: "fir-project-38425.firebaseapp.com",
+//   databaseURL: "https://fir-project-38425-default-rtdb.firebaseio.com",
+//   projectId: "fir-project-38425",
+//   storageBucket: "fir-project-38425.appspot.com",
+//   messagingSenderId: "412992568512",
+//   appId: "1:412992568512:web:7f9782ac6872723873c125",
+// };
 
 // Aaryan Firebase API
 // const secondaryApp = {
@@ -70,9 +70,20 @@ const secondaryAppConfig = {
 //   databaseURL: "https://finportal-e0cbf-default-rtdb.firebaseio.com",
 // };
 
+// Mihir Firebase API
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_DOMAIN_NAME,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_API_ID
+};
+
 //Firebase Instances
 export const useFirebase = () => useContext(firebaseContext);
-const secondaryApp =  initializeApp(secondaryAppConfig, "secondary");
+const secondaryApp =  initializeApp(firebaseConfig);
 // const app = initializeApp(secondaryApp);
 export const auth = getAuth(secondaryApp);
 const db = getDatabase(secondaryApp);
@@ -92,8 +103,21 @@ export const FirebaseApp = (props) => {
   };
   // login user..
   const signInUser = async (email, password) => {
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    const usersRef = mihir(db);
+
+
+    const fetching = await get(child(usersRef, "admin"));
+    const users = fetching.val()
+
+    const filteredUser = Object.values(users).find(dbemail => dbemail === email) || null;
+
+
+    if(filteredUser){
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      return user;
+    } else {
+      return {msg: "Invalid credentials !!"}
+    }
   };
   // logout user..
   const signOutUser = async () => {
@@ -103,7 +127,7 @@ export const FirebaseApp = (props) => {
   // realtime Database for user info..
   const storeInfo = async (userCredential, data) => {
     const user = await set(
-      dhanish(db, "users/" + userCredential.user.uid),
+      mihir(db, "users/" + userCredential.user.uid),
       data
     );
     return user;
@@ -214,7 +238,7 @@ export const FirebaseApp = (props) => {
     }
   };
   const isLoggedIn = isUser ? true : false;
-  console.log(isLoggedIn)
+  // console.log(isLoggedIn)
 
   return (
     <firebaseContext.Provider

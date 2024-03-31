@@ -6,16 +6,18 @@ import {
   useFirebase,
 } from "../../components/context/firebaseContext";
 import "../styles.css";
+import Loading from "../Loading";
 
 function Orders() {
   const firebasee = useFirebase();
   const [orders, setOrders] = useState([]);
-  const [filter, setfilter] = useState("false");
+  const [loading, setLoading] = useState(true)
+  const [filter, setfilter] = useState("pending");
   const [service, setService] = useState("Salary Or House Rent Income");
 
   useEffect(() => {
     userData();
-    console.log(filter);
+    // console.log(filter);
   }, [filter]);
 
   const [message, setmessage] = useState("");
@@ -77,16 +79,21 @@ function Orders() {
       result.forEach((doc) => {
         dataArr.push({ id: doc.id, ...doc.data() });
       });
+      setLoading(false)
       setOrders(dataArr);
-      console.log(orders);
+      // console.log(orders);
     });
   };
 
-  console.log(filter);
+  // console.log(filter);
+
+  if(loading) {
+    return <Loading />
+  }
 
   return (
     <div className="dashboard-content">
-      <DashboardHeader btnText="New Order" />
+      {/* <DashboardHeader btnText="New Order" /> */}
 
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
@@ -96,9 +103,9 @@ function Orders() {
             id=""
             onClick={(event) => setfilter(event.target.value)}
           >
-            <option value="true">Accept</option>
+            <option value="pending">Pending</option>
+            <option value="accept">Accept</option>
             <option value="reject">Reject</option>
-            <option value="false">Pending</option>
           </select>
           <select
             name="Service"
@@ -138,8 +145,8 @@ function Orders() {
             <th>Reject</th> */}
           </thead>
 
+            {/* console.log(document[service]) */}
           {orders.map((document) => {
-            console.log(document[service])
             return (
               <>
                 {document[service] && document[service].status === filter && (
@@ -149,9 +156,9 @@ function Orders() {
                     <td>{document[service].message}</td>
 
                     <td>
-                      {filter == "true" && "Accept"}
-                      {filter == "false" && "Pending"}
-                      {filter == "reject" && "Reject"}
+                      {filter === "accept" && "Accept"}
+                      {filter === "pending" && "Pending"}
+                      {filter === "reject" && "Reject"}
                     </td>
                     <div className="preview button">
                       <Preview

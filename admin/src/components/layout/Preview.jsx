@@ -4,8 +4,11 @@ import { useFirebase } from "../context/firebaseContext";
 import { listAll, getDownloadURL, ref } from "firebase/storage";
 
 import UserData from "./UserData";
+import { useNavigate } from "react-router-dom";
 
 function Preview({document,services,filters}) {
+
+  const navigate = useNavigate();
   const firebase = useFirebase();
   const [info, setinfo] = useState(null);
   const [imageList, setImageList] = useState([]);
@@ -14,38 +17,17 @@ function Preview({document,services,filters}) {
   const [imageUpload, setImageUpload] = useState([]);
   const [orders, setOrders] = useState([]);
   const handleChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setmessage(event.target.value);
   };
+
+  // setting info for UserData display
   const openModal = (event) => {
     event.preventDefault();
     setIsModalOpen(true);
-    firebase.getData(document.id).then((rs) => {
-      console.log(rs.data());
-      setinfo(rs.data());
-    });
-    console.log(info);
+  };
+  // console.log(info);
 
-  };
-  const handlebar = async (document) => {
-    // event.preventDefault()
-    console.log(document);    
-    document.service.map(serv => {
-      console.log(serv)
-    if(services == serv.servicename){
-      serv.message = message;
-      serv.status = filters
-     return;
-    }
-    })
-    console.log(document)
-    firebase.updateMessage(document).then((data) => {
-      console.log(data);
-    });
-    setmessage("");
-    userData();
-    // window.location.reload();
-  };
   const userData = () => {
     firebase.getUser().then((result) => {
       const dataArr = [];
@@ -56,27 +38,45 @@ function Preview({document,services,filters}) {
       console.log(orders);
     });
   };
-  const acceptData = async (document) => {
-    document.service.map(serv => {
-      console.log(serv)
-    if(services == serv.servicename){
-      serv.message = message;
-      serv.status = "accept"
-     return;
-    }
-    })
-    await firebase.updateMessage(document);
+
+  const handlebar = async (document) => {
+    // event.preventDefault()
+    // console.log(document);    
+    // document.service.map(serv => {
+    //   console.log(serv)
+    // if(services == serv.servicename){
+    //   serv.message = message;
+    //   serv.status = filters
+    //  return;
+    // }
+    // })
+    // console.log(message)
+    await firebase.updateMessage(document, message, "reject");
     userData();
+    navigate("/")
+  };
+  const acceptData = async (document) => {
+    // document.service.map(serv => {
+    //   console.log(serv)
+    // if(services == serv.servicename){
+    //   serv.message = message;
+    //   serv.status = "accept"
+    //  return;
+    // }
+    // })
+    await firebase.updateMessage(document, message, "accept");
+    userData();
+    navigate("/")
   };
   const closeModal = (event) => {
     event.preventDefault();
     setIsModalOpen(false);
   };
   useEffect(() => {
-    const imageListRef = ref(firebase.storage, `Documents/${document.id}`);
+    const imageListRef = ref(firebase.storage, `Documents/${document.id}/${services}`);
     const fetchImages = async () => {
       try {
-        console.log(services)
+        // console.log(services)
         const res = await listAll(imageListRef);
         const newImages = await Promise.all(
           res.items.map(async (item) => {
@@ -92,7 +92,15 @@ function Preview({document,services,filters}) {
     };
 
     fetchImages();
-  }, [firebase.isUser]);
+  }, []);
+
+  useEffect(() => {
+    firebase.getData(document.id).then((rs) => {
+      setinfo(rs.data());
+    });
+  },[])
+
+
   return (
     <div className="modal-container">
       <button onClick={openModal}>Open Modal</button>
@@ -113,8 +121,8 @@ function Preview({document,services,filters}) {
                     <img
                       src={image.url}
                       alt="loading"
-                      width="400"
-                      height="400"
+                      width="900vh"
+                      height="500vh"
                     />
                     <p>{image.name}</p>
                   </div>

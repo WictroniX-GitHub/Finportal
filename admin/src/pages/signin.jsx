@@ -10,18 +10,29 @@ export default function Signin() {
   // hooks
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [err, setError] = useState("")
 
   // onclick function
   const handleUser = async (e) => {
     e.preventDefault();
     try {
       const userCredential = await firebase.signInUser(email, password);
-      console.log("welocme", userCredential);
-      if (userCredential.user) {
-        navigate("/");
+      // console.log(userCredential.msg);
+      if(userCredential.msg) {
+        setError(userCredential.msg)
+        setTimeout(() => {
+          setError("")
+        }, 3000)
       }
+      // if (userCredential.user) {
+      //   navigate("/");
+      // }
     } catch (error) {
-      console.log(error);
+      setError("Invalid credentials !!")
+        setTimeout(() => {
+          setError("")
+        }, 3000)
+      // console.log(error);
     }
   };
 
@@ -34,6 +45,7 @@ export default function Signin() {
       </div>
       <div className="right-panel">
         <h1>Login</h1>
+        <h3 style={{color: "red", textAlign: "center"}}>{err}</h3>
         <form id="login-form">
           <input
             type="email"

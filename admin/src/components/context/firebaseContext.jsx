@@ -32,7 +32,8 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { getDatabase, set, ref as dhanish } from "firebase/database";
+// import { getDatabase, set, ref as dhanish } from "firebase/database";
+import { getDatabase,set, ref as mihir, child, get } from "firebase/database";
 
 // context api
 const firebaseContext = createContext(null);
@@ -49,15 +50,15 @@ const firebaseContext = createContext(null);
 // };
 
 // Dhanish Firebase API
-const firebaseConfig = {
-  apiKey: "AIzaSyD6MQy2d-bOJKE0QruR_IQahNue5A0LrDI",
-  authDomain: "finportal-4d01f.firebaseapp.com",
-  databaseURL: "https://finportal-4d01f-default-rtdb.firebaseio.com/",
-  projectId: "finportal-4d01f",
-  storageBucket: "finportal-4d01f.appspot.com",
-  messagingSenderId: "691533092881",
-  appId: "1:691533092881:web:499ab1cd636543223979b0",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyD6MQy2d-bOJKE0QruR_IQahNue5A0LrDI",
+//   authDomain: "finportal-4d01f.firebaseapp.com",
+//   databaseURL: "https://finportal-4d01f-default-rtdb.firebaseio.com/",
+//   projectId: "finportal-4d01f",
+//   storageBucket: "finportal-4d01f.appspot.com",
+//   messagingSenderId: "691533092881",
+//   appId: "1:691533092881:web:499ab1cd636543223979b0",
+// };
 
 // Aaryan Firebase API
 // const firebaseConfig = {
@@ -69,6 +70,19 @@ const firebaseConfig = {
 //   appId: "1:896200911693:web:fed94ead60d9ca7a74a504",
 //   databaseURL: "https://finportal-e0cbf-default-rtdb.firebaseio.com",
 // };
+
+
+// Mihir Firebase API
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_DOMAIN_NAME,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_API_ID
+};
+
 
 //Firebase Instances
 export const useFirebase = () => useContext(firebaseContext);
@@ -102,7 +116,7 @@ export const FirebaseApp = (props) => {
   // realtime Database for user info..
   const storeInfo = async (userCredential, data) => {
     const user = await set(
-      dhanish(db, "users/" + userCredential.user.uid),
+      mihir(db, "users/" + userCredential.user.uid),
       data
     );
     return user;
@@ -129,28 +143,42 @@ export const FirebaseApp = (props) => {
 
  
 
-  const updateMessage = async (document) => {
+  const updateMessage = async (document, message, status) => {
+    // console.log(message, status)
     const folderRef = ref(storage, `Documents/${document.id}`);
     listAll(folderRef).then((result) => {
       result.items.forEach((itemRef) => {
         deleteObject(itemRef);
       });
     });
-    return await updateDoc(doc(firestore, "users", document.id), document);
+
+    const userDocRef = doc(firestore, "users", document.id);
+    await updateDoc(userDocRef, {
+      [document.serve]: {
+        message: message,
+        status: status
+      }
+    });
+
+    // return await updateDoc(doc(firestore, "users", document.id), document);
   };
 
   
    //Upload ITRFORM File the Admin side
-   const submitITRFilebyadmin = async (coverImage,service) => {
-    const filename = coverImage.file.name.split(".")
-    console.log(filename.length)
-    const format = "."+filename[filename.length-1];
-    console.log(format)
-    const storeRef = ref(
-      storage,
-      `Documents/${isUser}/${service}/Admin/ITRFILE-${isUser}${format}`
-    );
-    const resultBucket = await uploadBytes(storeRef, coverImage.file);
+  const submitITRFilebyadmin = async (coverImage,service, id) => {
+
+    try{
+      const filename = coverImage.file.name.split(".")
+      const format = "."+filename[filename.length-1];
+      // console.log(format)
+      const storeRef = ref(
+        storage,
+        `Documents/${id}/${service}/Admin/ITRFILE-${id}${format}`
+        );
+        await uploadBytes(storeRef, coverImage.file);
+    } catch(err) {
+      console.log(err)
+    }
   };
 
   // list all details of user
@@ -163,6 +191,8 @@ export const FirebaseApp = (props) => {
     // const q = query(collectionRef, where("userId", "==", "rApylQJz61NMJT3CrCtxojg7tdc2"));
     
     const result = await getDocs(collectionRef);
+
+    // console.log(result)
     return result;
   };
 

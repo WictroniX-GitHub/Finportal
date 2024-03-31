@@ -35,7 +35,13 @@ function SideBar({ menu }) {
     <nav className="sidebar">
       <div className="sidebar-container">
         <div className="sidebar-logo-container">
-          <img src={logo} alt="logo" />
+          {/* <img src={} alt="logo" /> */}
+          <h1 style={{
+            textAlign: "center",
+            textTransform: "uppercase",
+            color: "white"
+            }}>
+            FinPortal</h1>
         </div>
 
         <div className="sidebar-container">

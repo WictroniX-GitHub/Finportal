@@ -1,89 +1,48 @@
 import React, { useState, useEffect, useContext } from "react";
-import DashboardHeader from "../../components/DashboardHeader";
-import Preview from "../../components/layout/Preview";
+
 import {
-  FirebaseApp,
   useFirebase,
 } from "../../components/context/firebaseContext";
 import "../styles.css";
+import Loading from "../Loading";
+import Product from "./Product";
 
 function Products() {
   const firebasee = useFirebase();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     userData();
   }, []);
 
   const [search, setSearch] = useState("");
-  const [message, setmessage] = useState("");
-  const [imageUpload, setImageUpload] = useState([]);
   const [service, setService] = useState("Salary Or House Rent Income");
-  console.log(service);
+  // console.log(service);
 
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setmessage(event.target.value);
-  };
-
-  const putData = async (event) => {
-    event.preventDefault();
-    try {
-      console.log("start");
-      await imageUpload.forEach((element) => {
-        console.log("working .... end");
-        firebasee.submitITRFilebyadmin(element, service);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    // window.location.reload();
-  };
-  const imageSet = (name, file) => {
-    setImageUpload([
-      ...imageUpload,
-      {
-        name: name,
-        file: file,
-      },
-    ]);
-    console.log(imageUpload);
-  };
-  const handlebar = async (document) => {
-    // event.preventDefault()
-    console.log(document);
-    document.message = message;
-    document.status = "reject";
-    setmessage("");
-    await firebasee.updateMessage(document).then((data) => {
-      console.log(data);
-    });
-    userData();
-    // window.location.reload();
-  };
-  const acceptData = async (doc) => {
-    doc.message = "success";
-    doc.status = "true";
-    await firebasee.updateMessage(doc);
-    userData();
-  };
+  
   const userData = () => {
     firebasee.getUser().then((result) => {
       const dataArr = [];
       result.forEach((doc) => {
         dataArr.push({ id: doc.id, ...doc.data() });
       });
+      setLoading(false)
       setOrders(dataArr);
-      console.log(orders);
+      // console.log(orders);
     });
   };
 
+  if(loading) {
+    return <Loading />
+  }
+
   return (
     <div className="dashboard-content">
-      <DashboardHeader btnText="New Order" />
+      {/* <DashboardHeader btnText="New Order" /> */}
 
       <div className="dashboard-content-container">
         <div className="dashboard-content-header">
-          <h2>Orders List</h2>
+          <h2>Products List</h2>
           <div className="dashboard-content-search">
             <input
               type="text"
@@ -118,6 +77,9 @@ function Products() {
 
           <button onClick={userData}>Refresh</button>
         </div>
+
+        {/* <h3 style={{color: "white", textAlign: "center", backgroundColor: "green"}}>{message}</h3> */}
+
         <table>
           <thead>
             {/* <th>ID</th> */}
@@ -131,27 +93,8 @@ function Products() {
           {orders.map((document) => {
             return (
               <>
-                {document[service] && document[service].status === "true" && (
-                  <tr>
-                    {/* <td>{document.id}</td> */}
-                    <td>{document.firstname + " " + document.lastname}</td>
-                    <td>{document.email}</td>
-                    <td>{document[service].message}</td>
-                    <td>{document[service].status}</td>
-                    <td style={{ display: "flex", gap: "10px" }}>
-                      <div className="first-box">
-                        <label htmlFor="" className="titles"></label>
-                        <input
-                          type="file"
-                          name="ITRFile"
-                          onChange={(event) => {
-                            imageSet(event.target.name, event.target.files[0]);
-                          }}
-                        />
-                        <button onClick={putData}>Upload File</button>
-                      </div>
-                    </td>
-                  </tr>
+                {document[service] && document[service].status === "accept" && (
+                  <Product document={document} service={service}/>
                 )}
               </>
             );
