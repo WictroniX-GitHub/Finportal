@@ -32,14 +32,13 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-// import { getDatabase, set, ref as dhanish } from "firebase/database";
-import { getDatabase,set, ref as mihir, child, get } from "firebase/database";
+import { getDatabase, set, ref as mihir, get, child } from "firebase/database";
 
 // context api
 const firebaseContext = createContext(null);
 
 // Madhvesh Firebase API
-// const firebaseConfig = {
+// const secondaryApp = {
 //   apiKey: "AIzaSyDbF8gyfgZYANqyWAB72QRireh8ma7GE3A",
 //   authDomain: "finportal-37d63.firebaseapp.com",
 //   databaseURL: "https://finportal-37d63-default-rtdb.firebaseio.com",
@@ -50,18 +49,18 @@ const firebaseContext = createContext(null);
 // };
 
 // Dhanish Firebase API
-// const firebaseConfig = {
-//   apiKey: "AIzaSyD6MQy2d-bOJKE0QruR_IQahNue5A0LrDI",
-//   authDomain: "finportal-4d01f.firebaseapp.com",
-//   databaseURL: "https://finportal-4d01f-default-rtdb.firebaseio.com/",
-//   projectId: "finportal-4d01f",
-//   storageBucket: "finportal-4d01f.appspot.com",
-//   messagingSenderId: "691533092881",
-//   appId: "1:691533092881:web:499ab1cd636543223979b0",
+// const secondaryAppConfig = {
+//   apiKey: "AIzaSyDcZZqM60_U-HaM9XnZSbfVIuxwZv9RFyU",
+//   authDomain: "fir-project-38425.firebaseapp.com",
+//   databaseURL: "https://fir-project-38425-default-rtdb.firebaseio.com",
+//   projectId: "fir-project-38425",
+//   storageBucket: "fir-project-38425.appspot.com",
+//   messagingSenderId: "412992568512",
+//   appId: "1:412992568512:web:7f9782ac6872723873c125",
 // };
 
 // Aaryan Firebase API
-// const firebaseConfig = {
+// const secondaryApp = {
 //   apiKey: "AIzaSyBT945IYFy9Tkg_cqBdrirwu-oHxPviLBw",
 //   authDomain: "finportal-e0cbf.firebaseapp.com",
 //   projectId: "finportal-e0cbf",
@@ -70,7 +69,6 @@ const firebaseContext = createContext(null);
 //   appId: "1:896200911693:web:fed94ead60d9ca7a74a504",
 //   databaseURL: "https://finportal-e0cbf-default-rtdb.firebaseio.com",
 // };
-
 
 // Mihir Firebase API
 const firebaseConfig = {
@@ -83,14 +81,14 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_API_ID
 };
 
-
 //Firebase Instances
 export const useFirebase = () => useContext(firebaseContext);
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-const db = getDatabase(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app);
+const secondaryApp =  initializeApp(firebaseConfig);
+// const app = initializeApp(secondaryApp);
+export const auth = getAuth(secondaryApp);
+const db = getDatabase(secondaryApp);
+const firestore = getFirestore(secondaryApp);
+const storage = getStorage(secondaryApp);
 const googleprovider = new GoogleAuthProvider();
 
 export const FirebaseApp = (props) => {
@@ -105,8 +103,21 @@ export const FirebaseApp = (props) => {
   };
   // login user..
   const signInUser = async (email, password) => {
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    const usersRef = mihir(db);
+
+
+    const fetching = await get(child(usersRef, "admin"));
+    const users = fetching.val()
+
+    const filteredUser = Object.values(users).find(dbemail => dbemail === email) || null;
+
+
+    if(filteredUser){
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      return user;
+    } else {
+      return {msg: "Invalid credentials !!"}
+    }
   };
   // logout user..
   const signOutUser = async () => {
@@ -141,44 +152,36 @@ export const FirebaseApp = (props) => {
     });
   };
 
- 
 
-  const updateMessage = async (document, message, status) => {
-    // console.log(message, status)
+  const updateMessage = async (document) => {
+    const updateValue = {
+      message: document.message,
+      status: document.status,
+    };
+
     const folderRef = ref(storage, `Documents/${document.id}`);
     listAll(folderRef).then((result) => {
       result.items.forEach((itemRef) => {
+        // Delete each item (file) in the folder
         deleteObject(itemRef);
       });
     });
-
-    const userDocRef = doc(firestore, "users", document.id);
-    await updateDoc(userDocRef, {
-      [document.serve]: {
-        message: message,
-        status: status
-      }
-    });
-
-    // return await updateDoc(doc(firestore, "users", document.id), document);
+    return await updateDoc(doc(firestore, "users", document.id), updateValue);
   };
 
   
    //Upload ITRFORM File the Admin side
-  const submitITRFilebyadmin = async (coverImage,service, id) => {
 
-    try{
-      const filename = coverImage.file.name.split(".")
-      const format = "."+filename[filename.length-1];
-      // console.log(format)
-      const storeRef = ref(
-        storage,
-        `Documents/${id}/${service}/Admin/ITRFILE-${id}${format}`
-        );
-        await uploadBytes(storeRef, coverImage.file);
-    } catch(err) {
-      console.log(err)
-    }
+   const submitITRFilebyadmin = async (coverImage) => {
+    const filename = coverImage.file.name.split(".")
+    // console.log(filename.length)
+    const format = "."+filename[filename.length-1];
+    console.log(format)
+    const storeRef = ref(
+      storage,
+      `Documents/${isUser}/Admin/ITRFILE-${isUser}${format}`
+    );
+    const resultBucket = await uploadBytes(storeRef, coverImage.file);
   };
 
   // list all details of user
@@ -189,10 +192,7 @@ export const FirebaseApp = (props) => {
   const getUser = async () => {
     const collectionRef = collection(firestore, "users");
     // const q = query(collectionRef, where("userId", "==", "rApylQJz61NMJT3CrCtxojg7tdc2"));
-    
     const result = await getDocs(collectionRef);
-
-    // console.log(result)
     return result;
   };
 
@@ -237,28 +237,22 @@ export const FirebaseApp = (props) => {
       console.log(err);
     }
   };
-
   const isLoggedIn = isUser ? true : false;
+  // console.log(isLoggedIn)
 
   return (
     <firebaseContext.Provider
       value={{
         signInUser,
         createUser,
-        storeInfo,
-        submitITR,
+
         isUser,
         isLoggedIn,
         signOutUser,
         isloading,
-        listDocs,
-        storage,
+
         signupWithGoogle,
         getUser,
-        updateMessage,
-        getData,
-        handleDelete,
-        submitITRFilebyadmin
       }}
     >
       {props.children}

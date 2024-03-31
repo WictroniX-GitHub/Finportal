@@ -22,7 +22,7 @@ import {
   query,
   where,
   updateDoc,
-  deleteDoc,
+  deleteDoc
 } from "firebase/firestore";
 import {
   getStorage,
@@ -32,8 +32,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-// import { getDatabase, set, ref as dhanish } from "firebase/database";
-import { getDatabase,set, ref as mihir, child, get } from "firebase/database";
+import { getDatabase, set, ref as mihir, get, child } from "firebase/database";
 
 // context api
 const firebaseContext = createContext(null);
@@ -73,6 +72,7 @@ const firebaseContext = createContext(null);
 
 
 // Mihir Firebase API
+// console.log(process.env.REACT_APP_API_KEY)
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_DOMAIN_NAME,
@@ -83,7 +83,6 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_API_ID
 };
 
-
 //Firebase Instances
 export const useFirebase = () => useContext(firebaseContext);
 const app = initializeApp(firebaseConfig);
@@ -92,7 +91,7 @@ const db = getDatabase(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 const googleprovider = new GoogleAuthProvider();
-
+// firebase.initializeApp(firebaseConfig);
 export const FirebaseApp = (props) => {
   const [isloading, setIsLoading] = useState(true);
   const [isUser, setIsUser] = useState("Loading");
@@ -105,8 +104,21 @@ export const FirebaseApp = (props) => {
   };
   // login user..
   const signInUser = async (email, password) => {
-    const user = await signInWithEmailAndPassword(auth, email, password);
-    return user;
+    const usersRef = mihir(db);
+
+
+    const fetching = await get(child(usersRef, "admin"));
+    const users = fetching.val()
+
+    const filteredUser = Object.values(users).find(dbemail => dbemail === email) || null;
+
+
+    if(filteredUser){
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      return user;
+    } else {
+      return {msg: "Invalid credentials !!"}
+    }
   };
   // logout user..
   const signOutUser = async () => {
@@ -141,44 +153,36 @@ export const FirebaseApp = (props) => {
     });
   };
 
- 
 
-  const updateMessage = async (document, message, status) => {
-    // console.log(message, status)
+  const updateMessage = async (document) => {
+    const updateValue = {
+      message: document.message,
+      status: document.status,
+    };
+
     const folderRef = ref(storage, `Documents/${document.id}`);
     listAll(folderRef).then((result) => {
       result.items.forEach((itemRef) => {
+        // Delete each item (file) in the folder
         deleteObject(itemRef);
       });
     });
-
-    const userDocRef = doc(firestore, "users", document.id);
-    await updateDoc(userDocRef, {
-      [document.serve]: {
-        message: message,
-        status: status
-      }
-    });
-
-    // return await updateDoc(doc(firestore, "users", document.id), document);
+    return await updateDoc(doc(firestore, "users", document.id), updateValue);
   };
 
   
    //Upload ITRFORM File the Admin side
-  const submitITRFilebyadmin = async (coverImage,service, id) => {
 
-    try{
-      const filename = coverImage.file.name.split(".")
-      const format = "."+filename[filename.length-1];
-      // console.log(format)
-      const storeRef = ref(
-        storage,
-        `Documents/${id}/${service}/Admin/ITRFILE-${id}${format}`
-        );
-        await uploadBytes(storeRef, coverImage.file);
-    } catch(err) {
-      console.log(err)
-    }
+   const submitITRFilebyadmin = async (coverImage) => {
+    const filename = coverImage.file.name.split(".")
+    // console.log(filename.length)
+    const format = "."+filename[filename.length-1];
+    console.log(format)
+    const storeRef = ref(
+      storage,
+      `Documents/${isUser}/Admin/ITRFILE-${isUser}${format}`
+    );
+    const resultBucket = await uploadBytes(storeRef, coverImage.file);
   };
 
   // list all details of user
@@ -189,10 +193,7 @@ export const FirebaseApp = (props) => {
   const getUser = async () => {
     const collectionRef = collection(firestore, "users");
     // const q = query(collectionRef, where("userId", "==", "rApylQJz61NMJT3CrCtxojg7tdc2"));
-    
     const result = await getDocs(collectionRef);
-
-    // console.log(result)
     return result;
   };
 
@@ -237,8 +238,9 @@ export const FirebaseApp = (props) => {
       console.log(err);
     }
   };
-
   const isLoggedIn = isUser ? true : false;
+
+  
 
   return (
     <firebaseContext.Provider
@@ -254,11 +256,10 @@ export const FirebaseApp = (props) => {
         listDocs,
         storage,
         signupWithGoogle,
-        getUser,
-        updateMessage,
         getData,
-        handleDelete,
-        submitITRFilebyadmin
+        // FetchPdf,
+        // payment,
+        // submitITRimages
       }}
     >
       {props.children}
